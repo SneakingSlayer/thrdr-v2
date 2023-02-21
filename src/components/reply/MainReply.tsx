@@ -45,7 +45,7 @@ const MainReply = () => {
                         yesterday
                      </Text>
                   </HStack>
-                  <Text>bitaw ay aslom kaayo ka istg</Text>
+                  <Text>test testtestv test testtestv test testtestv</Text>
                </Box>
                <Button
                   p={0}

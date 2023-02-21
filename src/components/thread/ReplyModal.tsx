@@ -67,7 +67,7 @@ const ReplyModal = (props: any) => {
                            </Text>
                         </HStack>
                         <Text fontSize={'lg'} fontWeight={700}>
-                           Ngano baho kaayo kag ilok? Pag tuon sad ug deodorant.
+                           test testtestv test testtestv test testtestv
                         </Text>
                      </Box>
                   </HStack>
