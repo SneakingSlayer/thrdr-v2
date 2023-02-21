@@ -26,7 +26,7 @@ export const threadsApi = createApi({
             url: `/api/v2/thread/${id}`,
             method: 'GET',
          }),
-         providesTags: ['GET_THREADS'],
+         providesTags: ['GET_THREAD'],
       }),
       createThread: builder.mutation({
          query: ({ id }) => ({
