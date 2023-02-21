@@ -1,6 +1,11 @@
 import './App.css';
 
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+   Route,
+   BrowserRouter as Router,
+   Routes,
+   Outlet,
+} from 'react-router-dom';
 
 import {
    LOGIN_ROUTE,
@@ -12,15 +17,22 @@ import {
 
 import { Login, Profile, Thread, Register, Settings } from '@/pages';
 
+import { InnerLayout, OuterLayout } from '@/components';
+
 function App() {
    return (
       <Router>
          <Routes>
-            <Route path={LOGIN_ROUTE} element={<Login />} />
-            <Route path={REGISTER_ROUTE} element={<Register />} />
-            <Route path={PROFILE_ROUTE} element={<Profile />} />
-            <Route path={THREAD_ROUTE} element={<Thread />} />
-            <Route path={SETTINGS_ROUTE} element={<Settings />} />
+            <Route element={<OuterLayout />}>
+               <Route path={LOGIN_ROUTE} element={<Login />} />
+               <Route path={REGISTER_ROUTE} element={<Register />} />
+            </Route>
+            <Route element={<InnerLayout />}>
+               <Route path={PROFILE_ROUTE} element={<Profile />} />
+               <Route path={THREAD_ROUTE} element={<Thread />} />
+               <Route path={SETTINGS_ROUTE} element={<Settings />} />
+            </Route>
+            <Route path={'*'} element={<>ERROR 404</>} />
          </Routes>
       </Router>
    );

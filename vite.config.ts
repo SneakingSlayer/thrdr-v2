@@ -9,6 +9,15 @@ export default defineConfig({
    },
 
    server: {
+      open: true,
+      proxy: {
+         '/proxy': {
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+            secure: false,
+            rewrite: (path) => path.replace(/^\/proxy/, ''),
+         },
+      },
       host: true,
       watch: {
          usePolling: true,

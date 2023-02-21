@@ -51,9 +51,7 @@ const ThreadCard = (props: any) => {
                   </Tag>
                </HStack>
                <LinkOverlay to={'/asd/asd'}>
-                  <Text>
-                     Ngano baho kaayo kag ilok? Pag tuon sad ug deodorant.
-                  </Text>
+                  <Text>test testtestv test testtestv test testtestv</Text>
                </LinkOverlay>
                <Flex justifyContent={'space-between'}>
                   <HStack spacing={3}>
