@@ -51,7 +51,6 @@ export const threadsApi = createApi({
         method: 'POST',
         body: payload,
       }),
-      invalidatesTags: ['GET_THREADS'],
     }),
   }),
 });

@@ -13,6 +13,15 @@ import {
 import { useCreateThreadMutation } from '@/redux/services/threadServices';
 import { useForm } from 'react-hook-form';
 
+import { useAppDispatch } from '@/redux/hooks';
+import { addThread } from '@/redux/slices/threadSlice';
+
+import { type ThreadProps } from '@/types';
+
+interface ResultProps {
+  data: { message: ThreadProps };
+}
+
 const ThreadForm = () => {
   const initPayload = {
     description: '',
@@ -23,12 +32,14 @@ const ThreadForm = () => {
     isLocked: false,
   };
 
+  const dispatch = useAppDispatch();
+
   const [createThread] = useCreateThreadMutation();
 
   const {
     register,
     handleSubmit,
-    setError,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
@@ -39,7 +50,8 @@ const ThreadForm = () => {
         isAnonymous: data.isAnonymous,
       };
       const result = await createThread({ payload });
-      console.log(result);
+      dispatch(addThread((result as ResultProps)?.data?.message));
+      reset();
     } catch (error) {}
   };
 

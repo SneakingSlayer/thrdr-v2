@@ -25,6 +25,9 @@ import { useLazyGetThreadsQuery } from '@/redux/services/threadServices';
 import { useParams } from 'react-router-dom';
 import { useInfiniteScroll } from '@/hooks';
 
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { loadThreads } from '@/redux/slices/threadSlice';
+
 import { type ThreadProps } from '@/types';
 
 const Profile = () => {
@@ -32,10 +35,11 @@ const Profile = () => {
 
   const { userId } = useParams();
 
+  const dispatch = useAppDispatch();
+
   const [getThreads, { data, isFetching, isError }] = useLazyGetThreadsQuery();
   const { lastElementRef, page } = useInfiniteScroll(data?.totalPages ?? 0);
-
-  const [threads, setThreads] = React.useState<ThreadProps[]>([]);
+  const { threads } = useAppSelector((state) => state.threads);
 
   React.useEffect(() => {
     getThreads({
@@ -45,9 +49,8 @@ const Profile = () => {
   }, [userId, page]);
 
   React.useEffect(() => {
-    if (data?.threads?.length > 0 && !isFetching) {
-      console.log(data?.threads);
-      setThreads((prev) => [...prev, ...data?.threads]);
+    if (data?.threads?.length > 0) {
+      dispatch(loadThreads(data?.threads));
     }
   }, [data?.threads, isFetching]);
 
@@ -85,8 +88,8 @@ const Profile = () => {
           </Menu>
         </Flex>
         <Grid gap={3}>
-          {threads?.map((data, k: number) => (
-            <>
+          {threads?.map((data: ThreadProps, k: number) => (
+            <React.Fragment key={k}>
               {
                 // eslint-disable-next-line multiline-ternary
                 k === threads?.length - 1 ? (
@@ -107,7 +110,7 @@ const Profile = () => {
                   </GridItem>
                 )
               }
-            </>
+            </React.Fragment>
           ))}
         </Grid>
       </Stack>

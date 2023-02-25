@@ -1,9 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
+
+// Services
 import { threadsApi } from './services/threadServices';
+
+// Slices
+import threadSlice from './slices/threadSlice';
 
 export const store = configureStore({
   reducer: {
     [threadsApi.reducerPath]: threadsApi.reducer,
+    threads: threadSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(threadsApi.middleware),
