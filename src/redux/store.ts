@@ -2,11 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { threadsApi } from './services/threadServices';
 
 export const store = configureStore({
-   reducer: {
-      [threadsApi.reducerPath]: threadsApi.reducer,
-   },
-   middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(threadsApi.middleware),
+  reducer: {
+    [threadsApi.reducerPath]: threadsApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(threadsApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

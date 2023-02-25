@@ -1,32 +1,21 @@
 import React from 'react';
 import {
-  Card,
-  CardBody,
   Text,
   Avatar,
   Stack,
   Box,
   Tag,
   TagLabel,
-  TagLeftIcon,
   HStack,
-  IconButton,
   Button,
-  AvatarGroup,
   Flex,
-  LinkBox,
-  Container,
-  Textarea,
-  Switch,
   Divider,
-  VStack,
   Grid,
   GridItem,
 } from '@chakra-ui/react';
 import { HiFire } from 'react-icons/hi';
 import { RiMessage3Line, RiShareForwardLine, RiEyeLine } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
-import { LinkOverlay, Appbar, Reply } from '@/components';
+import { Reply } from '@/components';
 
 const Thread = () => {
   return (
