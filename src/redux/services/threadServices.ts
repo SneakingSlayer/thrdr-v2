@@ -6,6 +6,17 @@ interface ThreadParams {
   id: string;
 }
 
+interface CreateThreadParams {
+  payload: {
+    description: string;
+    createdBy: string | null;
+    createdFor: string;
+    status: string;
+    isAnonymous: boolean;
+    isLocked: boolean;
+  };
+}
+
 export const threadsApi = createApi({
   reducerPath: 'threadsApi',
   baseQuery: fetchBaseQuery({
@@ -35,9 +46,10 @@ export const threadsApi = createApi({
       providesTags: ['GET_THREAD'],
     }),
     createThread: builder.mutation({
-      query: ({ id }: ThreadParams) => ({
-        url: `/api/v2/threads/${id}`,
+      query: ({ payload }: CreateThreadParams) => ({
+        url: `/api/v2/threads/${payload.createdFor}`,
         method: 'POST',
+        body: payload,
       }),
       invalidatesTags: ['GET_THREADS'],
     }),

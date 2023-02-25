@@ -20,7 +20,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { CgChevronDown } from 'react-icons/cg';
-import { ThreadCard, ReplyModal, ShareModal } from '@/components';
+import { ThreadCard, ReplyModal, ShareModal, ThreadForm } from '@/components';
 import { useLazyGetThreadsQuery } from '@/redux/services/threadServices';
 import { useParams } from 'react-router-dom';
 import { useInfiniteScroll } from '@/hooks';
@@ -37,18 +37,19 @@ const Profile = () => {
 
   const [threads, setThreads] = React.useState<ThreadProps[]>([]);
 
-  const combineThreads = async () => {
-    const result = await getThreads({
+  React.useEffect(() => {
+    getThreads({
       id: userId ?? '',
       query: `page=${page}&limit=10`,
     });
-    if (!result?.data?.threads?.length) return;
-    setThreads((prev) => [...prev, ...result?.data?.threads]);
-  };
+  }, [userId, page]);
 
   React.useEffect(() => {
-    combineThreads();
-  }, [userId, page]);
+    if (data?.threads?.length > 0 && !isFetching) {
+      console.log(data?.threads);
+      setThreads((prev) => [...prev, ...data?.threads]);
+    }
+  }, [data?.threads, isFetching]);
 
   return (
     <>
@@ -62,22 +63,7 @@ const Profile = () => {
             test testtestv test testtestv test testtestv
           </Text>
         </VStack>
-        <form action="">
-          <Stack>
-            <Textarea placeholder="Say something..." rows={4} />
-            <Flex justifyContent={'space-between'} alignItems={'center'}>
-              <HStack>
-                <Text fontSize={'sm'} color={'#A0AEC0'}>
-                  Anonymous?
-                </Text>
-                <Switch />
-              </HStack>
-              <Button colorScheme={'messenger'} size={'sm'} px={5}>
-                Post
-              </Button>
-            </Flex>
-          </Stack>
-        </form>
+        <ThreadForm />
         <Flex justifyContent={'space-between'}>
           <Heading size={'md'}>Threads</Heading>
           <Menu>

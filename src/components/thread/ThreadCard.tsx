@@ -56,7 +56,7 @@ const ThreadCard = (props: ThreadCardProps) => {
             </Tag>
           </HStack>
           <LinkOverlay to={`/${thread.createdFor.userName}/ID_GOES_HERE`}>
-            <Text>{thread.title}</Text>
+            <Text>{thread.description}</Text>
           </LinkOverlay>
           <Flex justifyContent={'space-between'}>
             <HStack spacing={3}>
