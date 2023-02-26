@@ -1,9 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { BASE_URL } from '@/constants';
+import { type ThreadUserProps } from '@/types';
 
 interface ReplyParams {
   id: string;
   query?: string;
+}
+
+interface CreateReplyProps {
+  query?: string;
+  payload: {
+    threadId: string;
+    createdBy: string | null | ThreadUserProps;
+    createdFor: string | null | ThreadUserProps;
+    message: string;
+    isAnonymous: boolean;
+    isLocked: boolean;
+  };
 }
 
 export const replyApi = createApi({
@@ -21,20 +34,21 @@ export const replyApi = createApi({
   tagTypes: ['GET_REPLIES', 'GET_THREAD'],
   endpoints: (builder) => ({
     getReplies: builder.query({
-      query: ({ id }: ReplyParams) => ({
-        url: `/api/v2/replies/${id}`,
+      query: ({ id, query }: ReplyParams) => ({
+        url: `/api/v2/replies/${id}?${query ?? ''}`,
         method: 'GET',
       }),
       providesTags: ['GET_REPLIES'],
     }),
     createReply: builder.mutation({
-      query: ({ id }: ReplyParams) => ({
-        url: `/api/v2/replies/${id}`,
+      query: ({ payload }: CreateReplyProps) => ({
+        url: `/api/v2/reply/${payload.threadId}`,
         method: 'POST',
+        body: payload,
       }),
       invalidatesTags: ['GET_REPLIES'],
     }),
   }),
 });
 
-export const { useLazyGetRepliesQuery } = replyApi;
+export const { useLazyGetRepliesQuery, useCreateReplyMutation } = replyApi;

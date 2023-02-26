@@ -18,6 +18,8 @@ import {
   MenuList,
   HStack,
   useDisclosure,
+  Skeleton,
+  Spinner,
 } from '@chakra-ui/react';
 import { CgChevronDown } from 'react-icons/cg';
 import { ThreadCard, ReplyModal, ShareModal, ThreadForm } from '@/components';
@@ -30,14 +32,16 @@ import { loadThreads } from '@/redux/slices/threadSlice';
 
 import { type ThreadProps } from '@/types';
 
+import { AnimatePresence, motion } from 'framer-motion';
+import { initThreadValues } from '@/constants';
+
 const Profile = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { userId } = useParams();
-
   const dispatch = useAppDispatch();
 
-  const [getThreads, { data, isFetching, isError }] = useLazyGetThreadsQuery();
+  const [getThreads, { data, isFetching, isLoading }] =
+    useLazyGetThreadsQuery();
   const { lastElementRef, page } = useInfiniteScroll(data?.totalPages ?? 0);
   const { threads } = useAppSelector((state) => state.threads);
 
@@ -53,6 +57,9 @@ const Profile = () => {
       dispatch(loadThreads(data?.threads));
     }
   }, [data?.threads, isFetching]);
+
+  const [selectedThread, setSelectedThread] =
+    React.useState<ThreadProps>(initThreadValues);
 
   return (
     <>
@@ -88,36 +95,67 @@ const Profile = () => {
           </Menu>
         </Flex>
         <Grid gap={3}>
-          {threads?.map((data: ThreadProps, k: number) => (
-            <React.Fragment key={k}>
-              {
-                // eslint-disable-next-line multiline-ternary
-                k === threads?.length - 1 ? (
-                  <GridItem key={k} colSpan={12} ref={lastElementRef}>
-                    <ThreadCard
-                      thread={data}
-                      onOpenReply={onOpen}
-                      onOpenShare={onOpen}
-                    />
-                  </GridItem>
-                ) : (
-                  <GridItem key={k} colSpan={12}>
-                    <ThreadCard
-                      thread={data}
-                      onOpenReply={onOpen}
-                      onOpenShare={onOpen}
-                    />
-                  </GridItem>
-                )
-              }
-            </React.Fragment>
-          ))}
+          <AnimatePresence>
+            {isLoading && (
+              <Stack>
+                <Skeleton height={'160px'} borderRadius={'12px'} />
+                <Skeleton height={'160px'} borderRadius={'12px'} />
+                <Skeleton height={'160px'} borderRadius={'12px'} />
+              </Stack>
+            )}
+            {!isLoading &&
+              threads?.map((data: ThreadProps, k: number) => (
+                <motion.div
+                  key={k}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {
+                    // eslint-disable-next-line multiline-ternary
+                    k === threads?.length - 1 ? (
+                      <GridItem colSpan={12} ref={lastElementRef}>
+                        <ThreadCard
+                          thread={data}
+                          onOpenReply={() => {
+                            onOpen();
+                            setSelectedThread(data);
+                          }}
+                          onOpenShare={onOpen}
+                        />
+                      </GridItem>
+                    ) : (
+                      <GridItem colSpan={12}>
+                        <ThreadCard
+                          thread={data}
+                          onOpenReply={() => {
+                            onOpen();
+                            setSelectedThread(data);
+                          }}
+                          onOpenShare={onOpen}
+                        />
+                      </GridItem>
+                    )
+                  }
+                </motion.div>
+              ))}
+            {isFetching && (
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.500"
+                color="blue.500"
+                size="md"
+              />
+            )}
+          </AnimatePresence>
         </Grid>
       </Stack>
 
-      <ReplyModal isOpen={isOpen} onClose={onClose} />
+      <ReplyModal thread={selectedThread} isOpen={isOpen} onClose={onClose} />
 
-      <ShareModal isOpen={isOpen} onClose={onClose} />
+      {/** <ShareModal isOpen={isOpen} onClose={onClose} /> */}
     </>
   );
 };

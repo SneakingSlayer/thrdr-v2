@@ -2,7 +2,7 @@
 export interface ThreadUserProps {
   id: string;
   userName: string;
-  avatar: string;
+  avatar: string | null;
 }
 
 export interface ThreadProps {
